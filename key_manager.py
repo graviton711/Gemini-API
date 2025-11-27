@@ -54,12 +54,23 @@ class KeyManager:
         self.usage_data = self._load_usage()
 
     def _load_keys(self):
+        # Priority 1: Environment Variable (Best for Vercel)
+        env_keys = os.environ.get("GEMINI_API_KEYS")
+        if env_keys:
+            try:
+                # Support both JSON list '["key1", "key2"]' and comma-separated 'key1,key2'
+                if env_keys.strip().startswith("["):
+                    return json.loads(env_keys)
+                return [k.strip() for k in env_keys.split(",") if k.strip()]
+            except Exception as e:
+                logger.error(f"Failed to parse GEMINI_API_KEYS: {e}")
+        
+        # Priority 2: Local File (Fallback)
         try:
             with open(self.key_file, "r") as f:
-                # Filter out empty lines and strip whitespace
                 return [line.strip() for line in f if line.strip()]
         except FileNotFoundError:
-            print(f"Warning: {self.key_file} not found.")
+            logger.warning(f"{self.key_file} not found and GEMINI_API_KEYS not set.")
             return []
 
     def _load_usage(self):

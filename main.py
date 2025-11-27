@@ -19,6 +19,14 @@ async def add_process_time_header(request: Request, call_next):
     response = await call_next(request)
     return response
 
+@app.get("/")
+async def root():
+    return {
+        "message": "Gemini API Proxy is running!",
+        "usage": "Use /health to check status, or configure your SDK to point here.",
+        "docs": "https://github.com/graviton711/Gemini-API"
+    }
+
 @app.get("/health")
 async def health_check():
     return {"status": "ok", "stats": key_manager.get_key_stats()}

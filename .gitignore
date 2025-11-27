@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+usage_log.json
+gemini-api-befc0-firebase-adminsdk-fbsvc-359da5d2c1.json
+serviceAccountKey.json
+curl_output.txt
